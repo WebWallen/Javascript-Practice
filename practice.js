@@ -624,6 +624,82 @@ console.log(`Child: ${isChild(5)} \n Senior: ${isSenior(100)} \n Pretty Day: ${i
 
 // Anonymous call back function example = setTimeout, which requires another function before it will do anything
 
-setTimeout(function() {
-    alert('ANNOYING WELCOME MESSAGE');
-}, 5000)
+// setTimeout(function() {
+//     alert('ANNOYING WELCOME MESSAGE');
+// }, 5000)
+
+// Array methods that accept a callback function done on every element in said array -- forEach
+
+let numList = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+// Option 1: combine forEach with an anonymous function specifying desired behavior
+numList.forEach(num => console.log(num * 5))
+
+// Option 2: combine forEach with a pre-created function
+function timesTen(n) {
+    console.log(n * 10);
+}
+
+numList.forEach(timesTen);
+
+// Option 3: more verbose version using the index
+numList.forEach(function(number, index) {
+    console.log(`Index: ${index} Number: ${number}`)
+})
+
+// Map method: creating a new array from an existing dataset
+const abbreviations = ['byob', 'rsvp', 'asap', 'diy'];
+
+// Boss asks you to convert them to uppercase with dots between
+const bigAbsPlusDots = abbreviations.map(abb => abb.toUpperCase().split('').join('.'));
+console.log(bigAbsPlusDots);
+
+// Common map use case: grab single data point from complicated structure (i.e. array of objects or big stinking objects)
+
+const batmanVillains = [
+    {
+        name: 'Joker',
+        weapon: 'Laughing gas'
+    },
+    {
+        name: 'Bane',
+        weapon: 'Venom'
+    },
+    {
+        name: 'Penguin',
+        weapon: 'Umbrella gun'
+    },
+    {
+        name: 'Riddler',
+        weapon: 'Violent puzzles'
+    },
+    {
+        name: 'Scarecrow',
+        weapon: 'Fear gas'
+    },
+    {
+        name: 'The Crying Gang',
+        weapon: 'Tear gas'
+    }
+]
+
+// Arrow function rules: no params must have empty parenthesis (). Two params must have (a, parenthesis). One param can go either way.
+const batmanVillainWeapons = batmanVillains.map(villain => console.log(villain.weapon));
+
+// Find returns the value of the FIRST element in an array that satisfies provided criteria
+
+const joker = batmanVillains.find(villain => villain.name === 'Joker');
+console.log(joker);
+
+// This would be useful when searching for the proverbial needle in a haystack (imagine Batman has 1,000 villains)
+
+const bane = batmanVillains.find(villain => villain.name === 'Bane');
+console.log(bane);
+
+// Filter allows you to create a (you guessed it) filtered array that only contains data meeting your criteria
+
+const gas = batmanVillains.filter(villain => villain.weapon.includes('gas'));
+// Another invented scenario = what if Batman wants to be ready for any lethal gas and must account for laughing gas, fear gas, tear gas...
+
+gas.forEach(gasType => console.log(Object.values(gasType)));
+// "Gas" is an array of objects, thus I'm looping through each object to access its value
