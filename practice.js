@@ -686,7 +686,7 @@ const batmanVillains = [
 // Arrow function rules: no params must have empty parenthesis (). Two params must have (a, parenthesis). One param can go either way.
 const batmanVillainWeapons = batmanVillains.map(villain => console.log(villain.weapon));
 
-// Find returns the value of the FIRST element in an array that satisfies provided criteria
+// Find returns the value of the FIRST element in an array that satisfies provided criteria -- typically used to find element associated with ID
 
 const joker = batmanVillains.find(villain => villain.name === 'Joker');
 console.log(joker);
@@ -703,3 +703,141 @@ const gas = batmanVillains.filter(villain => villain.weapon.includes('gas'));
 
 gas.forEach(gasType => console.log(Object.values(gasType)));
 // "Gas" is an array of objects, thus I'm looping through each object to access its value
+
+const oddAndEven = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const odd = oddAndEven.filter(num => num % 2 === 1); // === 1 always odd
+const even = oddAndEven.filter(num => num % 2 === 0); // === 0 always even
+console.log(odd);
+console.log(even);
+
+// Filter is often used to modify search criteria in e-commerce sites like Amazon
+const books = [
+    {
+        title: 'It',
+        author: 'Stephen King',
+        genres: ['Horror', 'Fiction'], 
+        rating: 4.3
+    },
+
+    {
+        title: 'The First Counsel',
+        author: 'Brad Meltzer',
+        genres: ['Political thriller', 'Fiction'],
+        rating: 3.8
+    },
+
+    {
+        title: 'The Taking',
+        author: 'Dean Koontz',
+        genres: ['Horror', 'Suspense', 'Fiction'],
+        rating: 4.1
+    },
+
+    {
+        title: 'The Killing Joke',
+        author: 'Alan Moore', 
+        genres: ['Graphic Novel', 'Fiction'],
+        rating: 3.9
+    },
+
+    {
+        title: '50 Shades of Grey',
+        author: "I Don't Know",
+        genres: ['Garbage', 'Fiction'],
+        rating: 1.25
+    }
+
+
+]
+
+const horror = books.filter(book => book.genres.includes('Horror'));
+// Note: we must use .includes (versus ===) here because we're accessing an array with multiple genres
+const fiction = books.filter(book => book.genres.includes('Fiction'));
+horror.forEach(book => console.log(Object.values(book)));
+fiction.forEach(book => console.log(Object.values(book)));
+
+// Using filter for a search-based query
+
+const query = 'The';
+const results = books.filter(book => {
+    // Don't want capitalization to matter
+    const title = book.title.toLowerCase();
+    // Return the search query
+    return title.includes(query.toLowerCase());
+})
+
+// Every checks every element of an array for a condition and returns true if they ALL meet it
+const everyBook = books.every(book => book.title.toLowerCase().includes('t'));
+console.log(everyBook);
+
+// Some does the same thing but returns true if ANY meet the condition
+const someBooks = books.some(book => book.author === 'Dean Koontz');
+console.log(someBooks);
+
+// The default behavior of sort is weird -- converts numbers to strings, which results in wrong outputs
+const sortThem = [1, 20, 3, 400.25, 50.5, 6000, 7.99];
+const wrongSort = sortThem.sort();
+console.log('This is wrong: ', wrongSort);
+
+// To make it behave correctly, we must pass in a comparison function and two inputs that symbolize sorted numbers
+const rightSort = sortThem.sort((a, b) => a - b);
+// A comes before B when you want to sort in ascending order
+console.log('This is right: ', rightSort);
+
+// To reverse the order, simply flip the order of "a" and "b" in the callback function
+const rightSortReversed = sortThem.sort((a, b) => b - a);
+// Note: this mutates the original array, so add a .slice() before sort() when that isn't desired
+console.log('This is right too (but reversed): ', rightSortReversed);
+
+// We can't subtract one object from another object so we must add its keys when sorting
+const sortBookRatings = books.sort((a, b) => a.rating - b.rating);
+// Let's confirm the data got mutated
+books.forEach(book => console.log(book));
+
+// Reduce takes a BIG input and "reduces" it down to ONE value
+const nums = [100, 200, 300, 400];
+// The callback function takes an accumulator and currevent value as arguments
+const numsTotal = nums.reduce((acc, cv) => acc + cv);
+// Should equal 1000
+console.log('Sum of nums: ', numsTotal);
+
+// To find the average, simply divide the total by array length
+const numsAverage = numsTotal / nums.length;
+console.log('Average of nums: ', numsAverage);
+
+// Reduce can also be used to determine the min or max value
+
+const numsMax = nums.reduce((max, cv) => {
+    if (cv > max) return cv;
+    else return max;
+})
+console.log('Max of Nums: ', numsMax);
+
+// Could also use built-in Math methods to achieve the same goal as demonstrated below
+const numsMin = nums.reduce((min, cv) => Math.min(min, cv));
+console.log('Min of nums: ', numsMin);
+
+// Here's another application of reduce to tally the results of a popular vote
+const votes = ['y', 'n', 'n', 'y', 'y', 'y', 'n', 'y', 'n', 'n', 'y', 'y', 'y'];
+
+// You can optionally pass a starting value to reduce, which typically isn't necessary, but is here
+const voteResults = votes.reduce((tally, vote) => {
+    // If it has a value, increment said value
+    if (tally[vote]) tally[vote]++;
+    // If it doesn't have a value, set to 1
+    else tally[vote] = 1;
+    // Return tally until all votes added
+    return tally;
+// Starting value is curly brackets because we want the tally to be presented in an object
+}, {})
+console.log('Results of Vote: ', voteResults);
+
+// Another reduce application used to group books with a certain rating together
+const booksByRating = books.reduce((ratings, book) => {
+    const bookKey = Math.floor(book.rating);
+    if (!ratings[bookKey]) ratings[bookKey] = [];
+    ratings[bookKey].push(book);
+    return ratings;
+}, {})
+console.log(booksByRating);
+
