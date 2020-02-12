@@ -841,3 +841,54 @@ const booksByRating = books.reduce((ratings, book) => {
 }, {})
 console.log(booksByRating);
 
+// Using a function with default value
+const greet = (person, greeting = "Hi") => {
+    console.log(`${greeting}, ${person}`)
+}
+greet('Daniel')
+greet('Daniel', 'Yo')
+
+// Default parameters must come at the end or the result will be wonky
+const badGreet = (person, greeting = "Hi", punctuation = "!") => {
+    console.log(`${greeting}, ${person}${punctuation}`)
+}
+// The question mark registered as "greeting", not "punctuation" - best to just use one default for this reason
+badGreet('Daniel', '?')
+
+// Spread operators are used to spread an iterable element inside a function, object, or array
+function giveMeFour(a, b, c, d) {
+    console.log('A: ', a);
+    console.log('B: ', b);
+    console.log('C: ', c);
+    console.log('D: ', d);
+}
+
+const batmanSidekicks = ['Robin', 'Nightwing', 'Azrael', 'Batgirl'];
+
+giveMeFour(batmanSidekicks);
+
+// Must precede with ... or it passes the entire array in as A
+giveMeFour(...batmanSidekicks);
+
+// You can also use the spread operator to combine arrays with a simpler syntax than .concat
+const bigDogs = ['Pitbull', 'Rottweiler', 'German Shepherd'];
+const smallDogs = ['Dachshund', 'Chihuahua', 'Poodle'];
+const allDogs = [...bigDogs, ...smallDogs];
+console.log(allDogs);
+
+// Spread operator can be used with objects to create child classes that are an extension of their parents
+const canine = {
+    houseTrained: false,
+    diet: 'Smaller critters',
+    legs: 4
+}
+
+const houseDog = {
+    ...canine,
+    // Can change properties but you must do so *after* the spread for them to be properly overwritten
+    houseTrained: true,
+    diet: 'Cheeseburgers'
+}
+
+console.log('Canine: ', canine);
+console.log('Pet dog: ', houseDog);
