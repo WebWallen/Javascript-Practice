@@ -949,9 +949,9 @@ const gotBattles = [
         casualties: 200000
     }
 ]
-// Places the last battle in an array by itself
+// Places the last battle (object) in a variable by itself
 const [, finale] = gotBattles;
-// Accesses the final property (casualties) from the finale array
+// Accesses the final property (casualties) from the finale object
 const { casualties: finaleBodyCount } = finale;
 // Confirm we grabbed the right number (200,000)
 console.log(`${finaleBodyCount} citizens of King's Landing got roasted on the day Daenerys snapped.`)
@@ -975,3 +975,212 @@ function printResponse([ protocol, status, contentType ]) {
 }
 // Pass in the array as an argument and call
 printResponse(response);
+
+// Object shorthand -- don't have to list key:value if you want to give them the same name
+const getStats = (arr) => {
+    const biggest = Math.max(...arr);
+    const smallest = Math.min(...arr);
+    const summed = arr.reduce((sum, cv) => sum + cv);
+    const averaged = sum / arr.length;
+    return { 
+        biggest, 
+        smallest, 
+        summed, 
+        averaged 
+    }
+}
+
+let reviews = [1, 3, 5, 4, 2, 5, 5, 4, 3, 2, 5, 5, 5];
+let stats = getStats(reviews);
+console.log(stats);
+
+// Computed properties = using a key name as a property in an object literal
+const addProp = (object, key, value) => {
+    return {
+        // Passes in current object and props
+        ...object,
+        // Adds any additional key value pairs
+        [key]: value
+    }
+};
+// Could also be written in one line like so:
+const addPropShort = (object, key, value) => ({ ...object, [key]: value })
+const gameshowHost = {
+    host: 'Alex Trebek'
+};
+// 'gameshow' must be in strings due to the square bracket syntax
+const updatedGameshowHost = addProp(gameshowHost, 'gameshow', 'Jeopardy');
+console.log(updatedGameshowHost);
+// Passing in the updated vs. orginal gameshow host (would be useful to create more complex clones of simple objects)
+const anotherUpdatedGameShowHost = addPropShort(updatedGameshowHost, 'debut', '03/30/64')
+console.log(anotherUpdatedGameShowHost);
+
+// You can add functions to objects; in this case, they are called methods, and called with dot notation
+const mathEquations = {
+    mathInputs: [1, 10, 100, 2, 20, 200, 3, 30, 300],
+    add: (x, y) => x + y,
+    subtract: (x, y) => x - y,
+    multiply: (x, y) => x * y,
+    divide: (x, y) => x / y
+}
+console.log(mathEquations.add(10, 20))
+
+// If the this keyword is used in the global scope, it refers to the window object
+function justTheWindow() { console.log(this); }
+
+// If the this keyword is used in an object method, it refers to the object itself
+const houseStark = {
+    sigil: 'direwolf',
+    colors: ['grey', 'white'],
+    saying: 'Winter is coming',
+    printHouse() {
+        console.log(this)
+    }
+};
+houseStark.printHouse();
+
+// You can also use this to pinpoint a specific property with an object's method
+const houseLannister = {
+    sigil: 'wolf',
+    colors: ['gold', 'crimson'],
+    saying: 'A Lannister always pays his debts',
+    printSaying() {
+        console.log(this.saying)
+    }
+}
+houseLannister.printSaying()
+
+// More complex use of "this" that allows us to access the info in a thorough fashion
+const houseTargaryen = {
+    sigil: 'dragon',
+    colors: ['red', 'black'],
+    saying: 'Fire and blood',
+    allHouseData() {
+        const {
+            sigil,
+            colors,
+            saying,
+        } = this;
+        return `House Targaryen's sigil is a ${sigil}. Their colors are ${colors[0]} and ${colors[1]}. Their motto: ${saying}.`
+    },
+    printHouseData() {
+        houseData = this.allHouseData(),
+        console.log(`House Data: \n ${houseData}`)
+    }
+}
+// Value of "this" depends on invocation context - if we assigned below code to a variable and tried calling that variable, it wouldn't work
+houseTargaryen.printHouseData();
+
+// BEWARE: the behavior of "this" as seen above does NOT work when using arrow functions - so it's not best practice to use those with methods
+const annoyer = {
+    // However, this shortcoming can be an asset when dealing with nested functions and callbacks as demonstrated below
+    phrases: [ 'YOLO', 'Canceled', 'Literally', 'Synergy' ],
+    pickPhrase() {
+        const {
+            phrases
+            // Assign this to phrases for easy access
+        } = this;
+        // Calculate random index based on length of array
+        const index = Math.floor(Math.random() * phrases.length);
+        // Return a randomly selected phrase
+        return phrases[index];
+    },
+    start() {
+        // Arrow function because this is the only way to access this keyword when nested
+        this.timerId = setInterval(() => {
+            console.log(this.pickPhrase())
+        }, 3000)
+    },
+    stop() {
+        clearInterval(this.timerId);
+        console.log("Praise Buddha... it's finallly over!")
+    }
+};
+annoyer.start();
+annoyer.stop();
+
+// Combining principles of objects, methods, destructuring, and this with a deck shuffling and card drawing program
+const makeDeck = () => {
+    return {
+        deck: [],
+        suits: ['hearts', 'diamonds', 'spades', 'clubs'],
+        cards: '2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A',
+        drawnCards: [],
+        initializeDeck() {
+            const { 
+                suits, 
+                cards, 
+                deck 
+            } = this;
+            // Split each card into an isolated string
+            for (let card of cards.split(',')) {
+                for (let suit of suits) {
+                    // Push each card and suit into an array of objects
+                    deck.push({
+                        card, 
+                        suit
+                    })
+                }
+            }
+            return deck
+        },
+        drawCard() {
+            // Pop the drawn card off our deck array
+            const drawnCard = this.deck.pop();
+            // Push the drawn card into our drawn cards array
+            this.drawnCards.push(drawnCard);
+            return drawnCard;
+        },
+        drawMultiple(numCards) {
+            // Initialize an empty away for our hand
+            const cardsDrawn = [];
+            // For each card the dealer gives us...
+            for (let i = 0; i < numCards; i++) {
+                // Push each element of the cards drawn array into the draw card method, which handles the rest
+                cardsDrawn.push(this.drawCard());
+            }
+            // Return cards drawn or the above method won't be able to access the data
+            return cardsDrawn;
+        },
+        shuffle() {
+            const {
+                deck
+            } = this;
+            // Loop over deck from back to front
+            for (let i = deck.length - 1; i > 0; i--) {
+                // Pick random index before current element
+                let j = Math.floor(Math.random() * (i + 1));
+                // Swap the cards in place with the deck's array syntax
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+    }
+}
+// myDeck.initializeDeck();
+// console.log(myDeck.deck);
+// myDeck.drawCard();
+// myDeck.drawCard();
+// myDeck.drawCard();
+// myDeck.drawMultiple(5);
+// myDeck.shuffle();
+// console.log(myDeck.deck);
+// To turn above functionality into a factory, simply turn the initial code in an arrow func and surround with return statement
+const deck1 = makeDeck();
+deck1.initializeDeck();
+deck1.shuffle();
+deck1.drawMultiple(10);
+console.log('First deck: ', deck1);
+
+const deck2 = makeDeck();
+deck2.initializeDeck();
+deck2.drawMultiple(2);
+console.log('Second deck: ', deck2);
+
+// Can't see the hand, need a forEach method to compare
+const hand1 = deck1.deck.forEach(card => console.log(card));
+const hand2 = deck2.deck.forEach(card => console.log(card));
+
+// Confirming difference between shuffled and unshuffled
+// console.log(hand1);
+// console.log(hand2);
+
