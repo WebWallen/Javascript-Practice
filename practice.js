@@ -892,3 +892,86 @@ const houseDog = {
 
 console.log('Canine: ', canine);
 console.log('Pet dog: ', houseDog);
+
+// Rest can be used to collect all arguments into an array we can use to allow a function to accept a dynamic amount of inputs
+function dynamicSum(...nums) {
+    return nums.reduce((total, curr) => total + curr);
+}
+console.log(dynamicSum(1, 2, 3, 4, 5))
+console.log(dynamicSum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+
+// Rest can also be used to collect the *remainder* of arguments when we want to specify a few -- must come last!
+function introduceYourself(first, last, ...titles) {
+    console.log(first);
+    console.log(last);
+    console.log(titles);
+}
+introduceYourself('Daniel', 'Wallen', 'Dogfather');
+introduceYourself('Jon', 'Snow', 'King of the North', 'Protector of the Realm', 'Commander of the Night Watch');
+
+// You can destructure an array (put another way, "unpack" selected elements while leaving the rest inside a box)
+const marioKartRaceStandings = [ "Bowser", "Luigi", "Princess Peach", "Mario", "Wario" ]
+
+const [gold, silver, bronze] = marioKartRaceStandings;
+// Notice the fourth and fifth place contestants didn't print
+console.log('First:', gold, 'Second:', silver, 'Third:', bronze);
+// If you want to skip certain elements, add a comma for each one like so:
+const [, , , fourth, last] = marioKartRaceStandings;
+console.log('Fourth:', fourth, 'Last:', last);
+
+// In arrays, you "unpack" based on position; in objects, you "unpack" based on properties
+const marioNemesis = {
+    name: 'Bowser',
+    weight: '800 lbs',
+    nickname: 'King Koopa'
+}
+// Notice the property names change from here
+console.log(marioNemesis);
+// Put property name in curly braces to access
+var { weight } = marioNemesis
+// If we want to change the key for some reason, assign the new label as a value
+const { nickname: alias } = marioNemesis;
+console.log('Weight:', weight, 'Alias:', alias);
+// Or with multiple variables and a "rest" operator...
+var { name, weight, ...rest } = marioNemesis;
+// Using "var" is ill-advised as we normally wouldn't want to do this in the real world
+
+// Combining these concepts with a more complex data structure (array of objects)...
+const gotBattles = [
+    {
+        name: "Battle of the Bastards",
+        contestants: ["Ramsey", "Jon Snow"],
+        casualties: 2000
+    },
+    {
+        name: "Fire and Blood",
+        contestants: ["Drogon", "Daenerys Targaryen", "All of King's Landing"],
+        casualties: 200000
+    }
+]
+// Places the last battle in an array by itself
+const [, finale] = gotBattles;
+// Accesses the final property (casualties) from the finale array
+const { casualties: finaleBodyCount } = finale;
+// Confirm we grabbed the right number (200,000)
+console.log(`${finaleBodyCount} citizens of King's Landing got roasted on the day Daenerys snapped.`)
+
+// We can also destructure an object's properties inside a function parameter list for convenient access
+function printBowser ({name, weight, nickname}) {
+    console.log(`${name}, ${weight}, ${nickname}`);
+}
+// Must pass in the object we are destructuring as an argument!
+printBowser(marioNemesis);
+
+// Same concept implemented with an array representing HTTP information
+const response = [ 
+    'HTTP/1.1',
+    '200 OK',
+    'application/json'
+];
+// Pick out the Status Code and print for the user's information
+function printResponse([ protocol, status, contentType ]) {
+    console.log(`Status Code: ${status}`)
+}
+// Pass in the array as an argument and call
+printResponse(response);
