@@ -87,14 +87,8 @@ const warriorsGames = [{
 const makeChart = (games, targetTeam) => {
   // Create scoreboard(ul) where we can place game results (li)
   const ulParent = document.createElement('ul');
-  // For each game in the Warriors Games object...
-  for (let game of warriorsGames) {
-    // Destructure the object containing home and away team...
-    const {
-      homeTeam, 
-      awayTeam
-    // ...and assign the result to a variable (game)
-    } = game;
+  // For each game in the games object passed through...
+  for (let game of games) {
     // Create a list item for each game result
     const gameLi = document.createElement('li');
     // Call the getScoreLine helper function, pass in each game, and attach to inner HTML
@@ -107,6 +101,7 @@ const makeChart = (games, targetTeam) => {
   return ulParent;
 }
 
+// Determines whether team is home/visitor and who won
 const whoWon = ({ homeTeam, awayTeam }, targetTeam) => {
   // If target team is the home team, assign to target
   const target = homeTeam.team === targetTeam ? homeTeam : awayTeam;
@@ -114,29 +109,21 @@ const whoWon = ({ homeTeam, awayTeam }, targetTeam) => {
   return target.isWinner;
 }
 
+// Takes data from object and formats it in a user friendly fashion
 const getScoreLine = ({ homeTeam, awayTeam }) => {
   // Destructure the above object so we can reuse both home/away
-  const {
-    team: hTeam,
-    points: hPoints
-  } = homeTeam;
+  const { team: hTeam, points: hPoints } = homeTeam;
   // Marking each with h or a to prevent confusion (repeat var)
-  const {
-    team: aTeam,
-    points: aPoints
-  } = awayTeam;
+  const { team: aTeam, points: aPoints } = awayTeam;
   // Use a template literal to assign home and away team 
   const teamNames = `${aTeam} @ ${hTeam}`;
   // Initialize scoreLine gloabaly so it can be used in/out of function scope
   let scoreLine;
-  // If away points are greater than home points...
-  if (aPoints > hPoints) {
-  // Bold the away team's score to specify winner
-    scoreLine = `<b>${aPoints}</b>-${hPoints}`;
-  // If home points are greater than away...
-  } else {
-    scoreLine = `${aPoints}-<b>${hPoints}</b>`;
-  }
+  // If away points are greater than home points, bold the away team's score to specify winner
+  if (aPoints > hPoints) scoreLine = `<b>${aPoints}</b>-${hPoints}`;
+  // If home points are greater than away, do the opposite...
+  else scoreLine = `${aPoints}-<b>${hPoints}</b>`;
+  // Return the properly formatted team name and score line
   return `${teamNames} ${scoreLine}`;
 }
 
