@@ -80,3 +80,20 @@ addItemInput.addEventListener('keypress', function (e) {
         this.value = '';
     }
 })
+
+const cc = document.querySelector('#cc');
+const terms = document.querySelector('#terms');
+
+const formData = {};
+for (let input of [cc, terms]) {
+    // Destructure the event object to pull out target property
+    input.addEventListener('input', ({ target }) => {
+        // Destructure some more to grab the form information we want
+        const { name, type, value, checked } = target;
+        // Set the name of our form data to checked (terms) or value (CC #)
+        formData[name] = type === 'checkbox' ? checked : value
+        // Confirm we are getting the right information
+        console.log(formData);
+        // Without the terinary and destructuring, we wouldn't access true/false for checkbox
+    })
+}
