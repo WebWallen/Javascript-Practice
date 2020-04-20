@@ -492,12 +492,14 @@ console.log(checkAverage([10, 20, 30, 40, 50, 60]));
 function isPangram(str) {
     let lowercased = str.toLowerCase();
     let alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
     for (let char of alphabet) {
         // -1 index means it doesn't exist -- could also use includes as seen above
         if (lowercased.indexOf(char) === -1) {
             return false;
         }
     }
+    
     return true;
 }
 console.log(isPangram('The five boxing wizards jump quickly'));
